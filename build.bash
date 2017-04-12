@@ -32,7 +32,7 @@ IMAGE="$1"
 GIT_REV=$(git log -n 1 --pretty=format:%h -- ${IMAGE})
 TAG="${GIT_REV}"
 
-IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-user-${2}:${TAG}"
+IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-user-${IMAGE}:${TAG}"
 
 if [ ! -f ${IMAGE}/Dockerfile ]; then
 	echo "No such file: ${IMAGE}/Dockerfile"
