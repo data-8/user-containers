@@ -23,7 +23,7 @@ if ! git diff-index --quiet HEAD; then
     echo "You have uncommited changes. Please commit them before building and"
     echo "populating. This helps ensure that all docker images are traceable"
     echo "back to a git commit."
-    #exit 1
+    exit 1
 fi
 
 IMAGE="$1"
