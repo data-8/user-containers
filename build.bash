@@ -6,7 +6,6 @@
 set -e
 
 DOCKER_REPO=$(jq -r '.buildSettings.dockerRepo' 'docker-settings.json')
-CLUSTERS=$(jq -r '.clusters | join(" ")' 'docker-settings.json')
 
 if [ -z "$1" ]; then
 	echo "Usage: $0 [ base | {user_image_type} ]"
