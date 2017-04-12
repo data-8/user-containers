@@ -5,10 +5,16 @@
 
 set -e
 
-DOCKER_REPO=$(jq -r '.buildSettings.dockerRepo' 'docker-settings.json')
+DOCKER_REPO=""
+
+while getopts ":r:" opt; do
+	case $opt in
+		r) DOCKER_REPO="$OPTARG" ;;
+	esac
+done
 
 if [ -z "$1" ]; then
-	echo "Usage: $0 [ base | {user_image_type} ]"
+	echo "Usage: $0 [ -r DOCKER_REPO ] [ base | {user_image_type} ]"
 	exit 1
 fi
 
@@ -17,7 +23,13 @@ if ! git diff-index --quiet HEAD; then
     echo "You have uncommited changes. Please commit them before building and"
     echo "populating. This helps ensure that all docker images are traceable"
     echo "back to a git commit."
-    exit 1
+    #exit 1
+fi
+
+IMAGE="$1"
+if [ ! -f ${IMAGE}/Dockerfile ]; then
+	echo "No such file: ${IMAGE}/Dockerfile"
+	exit 1
 fi
 
 kubectl cluster-info | grep -q azure | true
@@ -27,19 +39,17 @@ else
 	DOCKER_PUSH="gcloud docker -- push"
 fi
 
-IMAGE="$1"
 GIT_REV=$(git log -n 1 --pretty=format:%h -- ${IMAGE})
 TAG="${GIT_REV}"
 
-IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-user-${IMAGE}:${TAG}"
-
-if [ ! -f ${IMAGE}/Dockerfile ]; then
-	echo "No such file: ${IMAGE}/Dockerfile"
-	exit 1
-fi
-
 cd ${IMAGE}
-docker build -t ${IMAGE_SPEC} .
-${DOCKER_PUSH} ${IMAGE_SPEC}
 
-echo "Pushed ${IMAGE_SPEC}"
+if [ -z "${DOCKER_REPO}" ]; then
+	IMAGE_SPEC="jupyterhub-k8s-user-${IMAGE}:${TAG}"
+	docker build -t ${IMAGE_SPEC} .
+else
+	IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-user-${IMAGE}:${TAG}"
+	docker build -t ${IMAGE_SPEC} .
+	${DOCKER_PUSH} ${IMAGE_SPEC}
+	echo "Pushed ${IMAGE_SPEC}"
+fi
