@@ -12,6 +12,7 @@ while getopts ":r:" opt; do
 		r) DOCKER_REPO="$OPTARG" ;;
 	esac
 done
+shift $((OPTIND-1))
 
 if [ -z "$1" ]; then
 	echo "Usage: $0 [ -r DOCKER_REPO ] [ base | {user_image_type} ]"
