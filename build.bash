@@ -48,6 +48,7 @@ cd ${IMAGE}
 if [ -z "${DOCKER_REPO}" ]; then
 	IMAGE_SPEC="jupyterhub-k8s-user-${IMAGE}:${TAG}"
 	docker build -t ${IMAGE_SPEC} .
+	echo "Re-run with '-r DOCKER_REPO' to push to registry."
 else
 	IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-user-${IMAGE}:${TAG}"
 	docker build -t ${IMAGE_SPEC} .
