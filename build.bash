@@ -1,12 +1,21 @@
 #!/bin/bash
-# Builds and pushes a given image to gcr.io + all nodes in current kubectl context
+
+# Builds and pushes a given image to gcr.io + all nodes in current kubectl
+# context
+
 set -e
 
-DOCKER_REPO=$(jq -r '.buildSettings.dockerRepo' 'docker-settings.json')
-CLUSTERS=$(jq -r '.clusters | join(" ")' 'docker-settings.json')
+DOCKER_REPO=""
+
+while getopts ":r:" opt; do
+	case $opt in
+		r) DOCKER_REPO="$OPTARG" ;;
+	esac
+done
+shift $((OPTIND-1))
 
 if [ -z "$1" ]; then
-	echo "Usage: $0 [ hub | proxy | base | user {user_image_type} ]"
+	echo "Usage: $0 [ -r DOCKER_REPO ] [ base | {user_image_type} ]"
 	exit 1
 fi
 
@@ -18,6 +27,12 @@ if ! git diff-index --quiet HEAD; then
     exit 1
 fi
 
+IMAGE="$1"
+if [ ! -f ${IMAGE}/Dockerfile ]; then
+	echo "No such file: ${IMAGE}/Dockerfile"
+	exit 1
+fi
+
 kubectl cluster-info | grep -q azure | true
 if [ ${PIPESTATUS[1]} -eq 0 ]; then
 	DOCKER_PUSH="docker push"
@@ -25,25 +40,17 @@ else
 	DOCKER_PUSH="gcloud docker -- push"
 fi
 
-IMAGE="$1"
 GIT_REV=$(git log -n 1 --pretty=format:%h -- ${IMAGE})
 TAG="${GIT_REV}"
 
-if [ "${IMAGE}" == "user" ]; then
-    USER_IMAGE_TYPE="${2}"
-    DOCKERFILE="Dockerfile.${USER_IMAGE_TYPE}"
-    IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-${IMAGE}-${USER_IMAGE_TYPE}:${TAG}"
-else
-    DOCKERFILE="Dockerfile"
-    IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-${IMAGE}:${TAG}"
-fi
-
 cd ${IMAGE}
-if [ ! -f ${DOCKERFILE} ]; then
-	echo "No such file: ${IMAGE}/${DOCKERFILE}"
-	exit 1
-fi
-docker build -t ${IMAGE_SPEC} -f ${DOCKERFILE} .
-${DOCKER_PUSH} ${IMAGE_SPEC}
 
-echo "Pushed ${IMAGE_SPEC}"
+if [ -z "${DOCKER_REPO}" ]; then
+	IMAGE_SPEC="jupyterhub-k8s-user-${IMAGE}:${TAG}"
+	docker build -t ${IMAGE_SPEC} .
+else
+	IMAGE_SPEC="${DOCKER_REPO}/jupyterhub-k8s-user-${IMAGE}:${TAG}"
+	docker build -t ${IMAGE_SPEC} .
+	${DOCKER_PUSH} ${IMAGE_SPEC}
+	echo "Pushed ${IMAGE_SPEC}"
+fi
