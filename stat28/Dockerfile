@@ -1,4 +1,4 @@
-FROM gcr.io/data-8/jupyterhub-k8s-user-datahub:48e4097
+FROM gcr.io/data-8/jupyterhub-k8s-user-datahub:a714663
 
 MAINTAINER Ryan Lovett <rylo@berkeley.edu>
 
