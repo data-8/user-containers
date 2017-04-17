@@ -4,7 +4,7 @@
 # This will install them into /opt/conda, which is what we want
 
 # nbserverproxy, for neuro connector and others
-${CONDA_DIR}/bin/pip install git+https://github.com/ryanlovett/nbserverproxy.git
+${CONDA_DIR}/bin/pip install git+https://github.com/jupyterhub/nbserverproxy.git
 ${CONDA_DIR}/bin/jupyter serverextension enable --sys-prefix --py nbserverproxy
 
 # ipywidgets!
