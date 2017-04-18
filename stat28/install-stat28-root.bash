@@ -48,7 +48,7 @@ Rscript -e "IRkernel::installspec(FALSE)"
 
 # RStudio Server
 VERSION=1.0.136
-URL="https://download2.rstudio.org/rstudio-server-${VERSION}-amd64.deb"
+URL="https://download1.rstudio.org/rstudio-${VERSION}-amd64.deb"
 PACKAGE="$(basename ${URL})"
 
 apt-get -y --quiet --no-install-recommends install \
