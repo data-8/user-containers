@@ -22,3 +22,4 @@ git remote add -f origin https://github.com/data-8/data8assets.git
 echo "materials/sp17/*" >> .git/info/sparse-checkout
 echo "lec/sp17/*" >> .git/info/sparse-checkout
 git checkout gh-pages
+ 
