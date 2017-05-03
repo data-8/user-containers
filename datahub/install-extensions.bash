@@ -25,7 +25,7 @@ ${CONDA_DIR}/bin/jupyter serverextension enable --sys-prefix --py nbpuller
 ${CONDA_DIR}/bin/jupyter nbextension install --sys-prefix --py nbpuller
 ${CONDA_DIR}/bin/jupyter nbextension enable --sys-prefix --py nbpuller
 
-${CONDA_DIR}/bin/pip install git+https://github.com/data-8/nbgdrive.git@8367bd9
+${CONDA_DIR}/bin/pip install git+https://github.com/data-8/nbgdrive.git@3ae070b
 ${CONDA_DIR}/bin/jupyter serverextension enable --sys-prefix --py nbgdrive
 ${CONDA_DIR}/bin/jupyter nbextension install --sys-prefix --py nbgdrive
 ${CONDA_DIR}/bin/jupyter nbextension enable --sys-prefix --py nbgdrive
