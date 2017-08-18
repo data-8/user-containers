@@ -1,4 +1,4 @@
-FROM docker.io/berkeleydsep/singleuser-data8:v0.1
+FROM docker.io/berkeleydsep/singleuser-datahub:304b068
 
 MAINTAINER Ryan Lovett <rylo@berkeley.edu>
 
