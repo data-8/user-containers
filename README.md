@@ -1,3 +1,12 @@
+**THIS REPOSITORY IS NO LONGER MAINTAINED**
+
+Please see the containers defined in the UC Berkeley datahub deployment or other hub documentation.
+
+- https://github.com/berkeley-dsep-infra/datahub/tree/staging/deployments
+- https://docs.datahub.berkeley.edu
+
+--
+
 Docker images for UC Berkeley's DSEP
 =======
 
